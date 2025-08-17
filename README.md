@@ -46,6 +46,10 @@
 
 ---
 
+
+## Screenshot
+![Imgur Image](https://i.imgur.com/iW1h9UB.png)
+
 ## 🚀 Installation
 
 ### Method 1: Direct Upload
