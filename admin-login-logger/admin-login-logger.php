@@ -3,10 +3,11 @@
  * Plugin Name: WP Login Logger
  * Plugin URI: https://github.com/Yamiru/WP-login-logger
  * Description: Comprehensive login tracking system for all WordPress users with IP geolocation and role detection
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Yamiru
  * Author URI: https://github.com/Yamiru
- * License: GPL v3 or later
+ * License: GPL-3.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: wp-login-logger
  */
 
@@ -14,6 +15,12 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+// Load text domain for translations
+add_action('plugins_loaded', function() {
+    load_plugin_textdomain('wp-login-logger', false, dirname(plugin_basename(__FILE__)) . '/languages');
+});
+
 
 /**
  * Main plugin class
@@ -654,3 +661,32 @@ register_deactivation_hook(__FILE__, array('WPLoginLogger', 'deactivate'));
 add_action('plugins_loaded', function() {
     WPLoginLogger::getInstance();
 });
+
+
+
+// Add settings link on the plugins page
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), function($links) {
+    $settings_link = '<a href="admin.php?page=wp-login-logs">' . __('Settings', 'wp-login-logger') . '</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+});
+
+// Register settings page
+add_action('admin_menu', function() {
+    add_options_page(
+        __('WP Login Logger Settings', 'wp-login-logger'),
+        __('WP Login Logger', 'wp-login-logger'),
+        'manage_options',
+        'wp-login-logger-settings',
+        'wp_login_logger_render_settings_page'
+    );
+});
+
+function wp_login_logger_render_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1><?php _e('WP Login Logger Settings', 'wp-login-logger'); ?></h1>
+        <p><?php _e('Here you will be able to configure the plugin in future versions.', 'wp-login-logger'); ?></p>
+    </div>
+    <?php
+}
